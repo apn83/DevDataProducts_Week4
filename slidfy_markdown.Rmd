@@ -1,0 +1,75 @@
+---
+title: "Exploring mtcars dataset"
+author: "ArunPrasanna"
+date: "7/10/2020"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## mtcars dataset
+
+``mtcars`` is a standard dataset, that contains information on various parameters related to car performance and engine capacity
+
+```{r mtcars, echo=TRUE}
+library(datasets)
+head(mtcars)
+```
+
+## Shiny App to explore mtcars
+
+- An app is created to see factors affecting mileage
+- The factors considered here are
+  - horse power
+  - weight
+  - displacement
+  - No. of Cylinders
+
+- Next we shall look into ``ui.R`` and ``server.R`` to create shinyApp
+
+## ui.R
+
+```{r, echo = TRUE, eval=FALSE}
+library(shiny)
+library(ggplot2)
+shinyUI(fluidPage(
+  titlePanel("Explore mtcars dataset"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("inputDF","Enter Y to plot vs mpg",choices = c('wt','disp','hp'))
+    ),
+    mainPanel(plotOutput("plot1")
+              )
+  )
+))
+```
+
+## server.R
+
+```{r, echo=TRUE, eval=FALSE}
+shinyServer(function(input, output) {
+  
+  output$plot1 <- renderPlot({
+    ggplot(data=mtcars, aes_string(x='mpg', y=input$inputDF, col='factor(cyl)')) +
+      geom_point() + 
+      geom_smooth(method="lm")
+  })
+})
+```
+
+App can be accessed in [Click on link !]
+
+https://arunprasanna83.shinyapps.io/DemoApp/
+
+It takes few seconds for plot to appear !
+
+## Summary
+
+- App can be viewed in https://arunprasanna83.shinyapps.io/DemoApp/
+- Plot shows how the variables affect mpg with no. of cylinders in consideration
+- As the weight of the car decreases, mileage increases with increase in number of cylinder
+- Displacement decreases with mileage, except when 6 cylinders are used
+- Horse power also show similar relation to mileage with displacement. 
+
